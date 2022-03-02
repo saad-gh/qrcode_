@@ -73,10 +73,9 @@ function timeout(ms) {
 function pdfGenerator() {
 
     // iterate over all qrcodes info
-    const qrcodesInfo = this.requestBody.data
     const files = []
-    for(let i = 0; i < qrcodesInfo.length; i++){
-        let info = qrcodesInfo[i]
+    for(let i = 0; i < this.qrcodesInfo.length; i++){
+        let info = this.qrcodesInfo[i]
     
         // initialize new pdf document
         const doc = new PDFDocument({ autoFirstPage : false })
@@ -146,6 +145,7 @@ async function handler(requestBody) {
 
     // pdfGenerator dependencies
     pdfGenerator.requestBody = requestBody
+    pdfGenerator.qrcodesInfo = requestBody.data
     pdfGenerator.folder = folder
     pdfGenerator.pageCfg = pageCfg
     pdfGenerator.parser = new XMLParser({
@@ -164,8 +164,10 @@ async function handler(requestBody) {
     })
 
     const files = await Promise.all(pdfGenerator.call(pdfGenerator))
-    files.forEach(file => file.url = folder.data.webViewLink)
-    return files
+    return files.map((file, i) =>  ({
+        url : folder.data.webViewLink,
+        sku : pdfGenerator.qrcodesInfo[i].sku
+    }))
 }
 
 module.exports = {

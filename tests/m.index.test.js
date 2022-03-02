@@ -32,22 +32,24 @@ describe('getQRCodes', () => {
     // Verify behavior of tested function
     assert.ok(res.send.calledOnce);
     assert.equal(res.send.firstCall.args[0].qrcodes.length, count);
+    console.log(JSON.stringify(res.send.firstCall.args[0].qrcodes))
   });
 
   // deployed version test
   it('deployed version test', async () => {
     try{
-      const token = await getIdToken()
+      // const token = await getIdToken()
       const response = await request({
         url: "https://europe-west3-mtc-platform.cloudfunctions.net/getQRCodes",
         method: 'POST',
         data: skus_,
         headers: {
-          "Authorization": `Bearer ${token}`,
+          // "Authorization": `Bearer ${token}`,
           "Content-Type" : 'application/json'
         }
       });
       assert.equal(response.data.qrcodes.length, count);
+      console.log(response.data)
     } catch (e) {
       console.log(e.message)
       assert.fail("server error")
