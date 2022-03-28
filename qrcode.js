@@ -99,10 +99,16 @@ function pdfGenerator() {
         // update pdf with caption
         doc.translate(-(doc.page.width - this.qrcodeCfg.width) / 2, -this.pageCfg.margins.top)
         .text(
-            caption, 
+            this.qrcodeCfg.content, 
             (doc.widthOfString(caption) + this.pageCfg.margins.left) / 2,
             // + 10 pts for some gap between qrcode and caption 
             this.pageCfg.margins.top + cmToPts(this.requestBody.qrcode.height) + 10, 
+            { align : 'center' }
+        )
+        .text(
+            caption, 
+            (doc.widthOfString(caption) + this.pageCfg.margins.left) / 2,
+            undefined,
             { align : 'center' }
         )
 
